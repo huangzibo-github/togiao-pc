@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
       首页
   </div>
 </template>
@@ -10,6 +10,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang='less' scoped>
+    .home {
+        span {
+            color: #000;
+        }
+    }
 </style>
