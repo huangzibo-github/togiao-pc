@@ -7,7 +7,10 @@
             </el-aside>
             <el-container>
                 <!-- 上下布局 -->
-                <el-header class="header">头部</el-header>
+                <el-header class="header">
+                    <!-- 头部组件 -->
+                    <layout-header></layout-header>
+                </el-header>
                 <el-main class="main">主要区域</el-main>
             </el-container>
         </el-container>
@@ -16,19 +19,17 @@
 
 <script>
 import layoutAside from '../../components/home/layout-aside.vue'
+import layoutHeader from '../../components/home/layout-header.vue'
 export default {
   components: {
-    'layout-aside': layoutAside
+    'layout-aside': layoutAside,
+    'layout-header': layoutHeader
   }
 }
 </script>
 
 <style lang="less" scoped>
     .home {
-        .header {
-            background-color: yellow;
-        }
-
         .main {
             background-color: green;
         }
