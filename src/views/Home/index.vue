@@ -11,7 +11,10 @@
                     <!-- 头部组件 -->
                     <layout-header></layout-header>
                 </el-header>
-                <el-main class="main">主要区域</el-main>
+                <el-main class="main">
+                    <!-- 放置二级路由容器 -->
+                    <router-view></router-view>
+                </el-main>
             </el-container>
         </el-container>
     </div>

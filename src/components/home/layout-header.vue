@@ -47,7 +47,7 @@ export default {
         Authorization: `Bearer ${token}`// Bearer后面要加空格
       }
     }).then(result => {
-      console.log(result.data)
+      // console.log(result.data)
       this.userInfo = result.data.data // 获取用户个人信息
     })
   },
