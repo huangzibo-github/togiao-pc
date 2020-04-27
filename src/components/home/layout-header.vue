@@ -8,12 +8,14 @@
       <!-- 右侧 -->
       <el-col class="right" :span='4'>
           <el-row type='flex' justify='end' align='middle'>
-            <img src="../../assets/img/avatar.jpg" alt="">
+            <!-- 使用三元表达式，如果没有头像则使用默认头像 -->
+            <img :src="!userInfo.photo ? userInfo.photo : defaultImg " alt="">
             <!-- 下拉菜单 -->
             <!-- 点击激活，设置trigger="click"，默认为hover激活 -->
             <el-dropdown trigger="click">
                 <span>
-                    昵称666666
+                    <!-- 更改昵称 -->
+                    {{userInfo.name}}
                     <i class="el-icon-caret-bottom"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -29,7 +31,26 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      userInfo: {}, // 个人信息
+      defaultImg: require('../../assets/img/avatar.jpg') // 先把地址转换成变量，再进行三元表达式判断
+    }
+  },
+  created () {
+    const token = window.localStorage.getItem('user-token') // 获取令牌
+    // 直接通过axios查询个人信息
+    this.$axios({
+      url: '/user/profile',
+      // header参数
+      headers: {
+        Authorization: `Bearer ${token}`// Bearer后面要加空格
+      }
+    }).then(result => {
+      console.log(result.data)
+      this.userInfo = result.data.data // 获取用户个人信息
+    })
+  }
 }
 </script>
 
