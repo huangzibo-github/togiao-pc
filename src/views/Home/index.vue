@@ -2,7 +2,7 @@
     <div class="home">
         <el-container>
             <!-- 左右布局 -->
-            <el-aside style="background-color:#353b4e;height:100vh;width:230px">
+            <el-aside style="background-color:#353b4e;min-height:100vh;width:230px;overflow:hidden">
                 <layout-aside></layout-aside>
             </el-aside>
             <el-container>
@@ -11,7 +11,7 @@
                     <!-- 头部组件 -->
                     <layout-header></layout-header>
                 </el-header>
-                <el-main class="main">
+                <el-main class="main" style="padding:0">
                     <!-- 放置二级路由容器 -->
                     <router-view></router-view>
                 </el-main>
@@ -30,9 +30,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    .home {
-        .main {
-            background-color: green;
-        }
-    }
+
 </style>
