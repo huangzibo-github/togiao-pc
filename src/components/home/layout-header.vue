@@ -38,17 +38,12 @@ export default {
     }
   },
   created () {
-    const token = window.localStorage.getItem('user-token') // 获取令牌
     // 直接通过axios查询个人信息
     this.$axios({
-      url: '/user/profile',
-      // header参数
-      headers: {
-        Authorization: `Bearer ${token}`// Bearer后面要加空格
-      }
+      url: '/user/profile'
     }).then(result => {
       // console.log(result.data)
-      this.userInfo = result.data.data // 获取用户个人信息
+      this.userInfo = result.data // 获取用户个人信息
     })
   },
   methods: {

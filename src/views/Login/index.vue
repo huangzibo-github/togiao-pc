@@ -78,20 +78,13 @@ export default {
             data: this.loginForm
           }).then(result => {
             console.log(result)
-            window.localStorage.setItem('user-token', result.data.data.token)
+            window.localStorage.setItem('user-token', result.data.token)
             // 调用localStorage的setItem方法，将token保存在本地
             this.$router.push('/home')
             // 登陆成功之后的提示
             this.$message({
               message: '登陆成功',
               type: 'success'
-            })
-          }).catch(error => {
-            console.log(error)
-            // 登陆失败之后的提示
-            this.$message({
-              message: '手机号或验证码不正确',
-              type: 'warning'
             })
           })
         }
