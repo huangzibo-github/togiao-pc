@@ -15,7 +15,6 @@ const routes = [
   {
     // 主页
     path: '/home',
-    name: 'Home',
     component: Home,
     children: [{
       path: '', // 二级路由什么都不写，就会作为一级路由的默认显示组件
