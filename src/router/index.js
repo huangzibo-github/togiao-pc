@@ -16,9 +16,13 @@ const routes = [
     // 主页
     path: '/home',
     component: Home,
+    // 二级路由表
     children: [{
       path: '', // 二级路由什么都不写，就会作为一级路由的默认显示组件
       component: Home2
+    }, {
+      path: 'comment',
+      component: () => import('../views/comment')// 按需加载
     }]
   }, {
     // 登录页
