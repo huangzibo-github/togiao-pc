@@ -8,7 +8,7 @@
       </bread-crumb>
 
       <!-- body内容 -->
-      <el-table :data='list'>
+      <el-table v-loading="loading" :data='list'>
           <!-- 列组件 label表头 -->
           <el-table-column prop="title" width="600" label="标题"></el-table-column>
           <el-table-column :formatter="formatterBool" prop="comment_status" label="评论状态"></el-table-column>
@@ -38,6 +38,7 @@
 export default {
   data () {
     return {
+      loading: false, // 加载状态
       list: [],
       page: {
         total: 0, // 数据总条数
@@ -67,6 +68,7 @@ export default {
       }).then(result => {
         this.list = result.data.results // 获取评论列表数据给本身data
         this.page.total = result.data.total_count // 获取文章总条数
+        this.loading = false
       })
     },
     // 定义一个布尔值转换方法
@@ -101,6 +103,7 @@ export default {
     }
   },
   created () {
+    this.loading = true
     this.getComment()
   }
 }
