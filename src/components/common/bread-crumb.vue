@@ -5,7 +5,7 @@
       <el-breadcrumb-item to="/home">首页</el-breadcrumb-item>
       <el-breadcrumb-item>
           <!-- 插槽 -->
-          <solt name="title">评论列表</solt>
+          <slot name="title"></slot>
       </el-breadcrumb-item>
   </el-breadcrumb>
 </template>

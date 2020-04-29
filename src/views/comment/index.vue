@@ -4,7 +4,7 @@
       <!-- 面包屑给了卡片的具名插槽  slot="header" -->
       <bread-crumb slot="header">
       <!-- 插槽内容 -->
-        <template slot="title"></template>
+        <template slot="title">评论列表</template>
       </bread-crumb>
 
       <!-- body内容 -->
