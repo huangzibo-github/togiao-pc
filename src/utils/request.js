@@ -14,7 +14,7 @@ axios.interceptors.request.use(function (config) {
 }, function () {
   // 第二个参数 请求失败时执行
 })
-axios.defaults.transformRespones = [function (data) {
+axios.defaults.transformResponse = [function (data) {
   return JSONBig.parse(data) // 用JSONBig.parse(data)替换之前的JSON.parse(data)
 }]
 // 响应拦截器
