@@ -2,6 +2,7 @@
 import axios from 'axios'
 import router from '../router' // 引入路由实例对象
 import { Message } from 'element-ui' // 引入提示对象
+import JSONBig from 'json-bigint' // 引入第三方包
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/' // 赋值给默认地址
 // 请求拦截器
 axios.interceptors.request.use(function (config) {
@@ -13,6 +14,9 @@ axios.interceptors.request.use(function (config) {
 }, function () {
   // 第二个参数 请求失败时执行
 })
+axios.defaults.transformRespones = [function (data) {
+  return JSONBig.parse(data) // 用JSONBig.parse(data)替换之前的JSON.parse(data)
+}]
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
   // 对响应数据进行处理
@@ -52,6 +56,8 @@ axios.interceptors.response.use(function (response) {
   }
   // 提示消息
   Message({ type: 'warning', message })
+  // 想让错误拦截器的内容继续进入到以后的catch中，而不是进入then
+  return Promise.reject(error)
 })
 
 export default axios // 导出封装好的axios

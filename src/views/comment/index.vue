@@ -18,7 +18,7 @@
               <!-- 作用域插槽 -->
               <template slot-scope="obj">
                 <el-button type="text" size='small'>修改</el-button>
-                <el-button type="text" size='small'>{{obj.row.comment_status? '关闭评论':'打开评论'}}</el-button>
+                <el-button @click="openOrClose(obj.row)" type="text" size='small'>{{obj.row.comment_status? '关闭评论':'打开评论'}}</el-button>
               </template>
           </el-table-column>
       </el-table>
@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     //   请求评论列表数据
-    getCommend () {
+    getComment () {
       // axios 默认是get类型
       // query 查询参数
       this.$axios({ url: '/articles', params: { response_type: 'comment' } }).then(result => {
@@ -48,10 +48,32 @@ export default {
       // cellValue 当前单元格的值
       // index 当前下标
       return cellValue ? '正常' : '关闭'
+    },
+    openOrClose (row) {
+      const mess = row.comment_status ? '关闭' : '打开'
+      this.$confirm(`您确定要${mess}评论吗`).then(() => {
+        this.$axios({
+          method: 'put',
+          url: '/comments/status',
+          params: {
+            article_id: row.id.toString()
+          },
+          data: {
+            allow_comment: !row.comment_status
+          }
+        }).then(result => {
+        //   打开或者关闭评论成功之后
+          this.$message({
+            type: 'success',
+            message: '操作成功'
+          })
+          this.getComment() // 重新请求列表
+        })
+      })
     }
   },
   created () {
-    this.getCommend()
+    this.getComment()
   }
 }
 </script>
