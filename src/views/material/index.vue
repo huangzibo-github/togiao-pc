@@ -3,7 +3,7 @@
       <bread-crumb slot="header">
         <template slot="title">素材管理</template>
       </bread-crumb>
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName"  @tab-click="changeTab">
             <el-tab-pane label="全部素材" name="all">
                 <!-- 全部素材内容 -->
                 <div class="img-list">
@@ -16,7 +16,14 @@
                     </el-card>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="收藏素材" name="collect"></el-tab-pane>
+            <el-tab-pane class="img-list" label="收藏素材" name="collect">
+                <!-- 收藏素材内容 -->
+                <el-card class="img-card img-list2" v-for="item in list" :key="item.id">
+                    <img :src="item.url" alt="">
+                    <el-row class="operate" type='flex' justify='space-around' align='middle'>
+                    </el-row>
+                </el-card>
+            </el-tab-pane>
         </el-tabs>
   </el-card>
 </template>
@@ -30,17 +37,22 @@ export default {
     }
   },
   methods: {
+    //   切换tab事件
+    changeTab () {
+      this.getAllMaterial() // 点击切换需要重新查询一次,只需要再调用一次方法
+    },
     getAllMaterial () {
       this.$axios({
         url: '/user/images',
-        params: { collect: false }
+        // collect为false是查看所有  this.activeName === 'collect' 是查看收藏
+        params: { collect: this.activeName === 'collect' }
       }).then(result => {
         this.list = result.data.results
       })
     }
   },
   created () {
-    this.getAllMaterial() // 获取所有素材
+    this.getAllMaterial() // 获取所有素材 第一次进入 activeName 为 all
   }
 }
 </script>
@@ -66,8 +78,21 @@ export default {
                 font-size: 20px;
                 position: absolute;
                 bottom: 0;
+                left: 0;
                 height: 30px;
-                margin-left: -20px;
+            }
+        }
+        .img-list2 {
+            width: 150px;
+            height: 120px;
+            margin: 30px 40px 60px 40px;
+            position: relative;
+            border-radius: 5%;
+            img {
+                width: 150px;
+                height: 120px;
+                border-radius: 5%;
+                margin: -20px 0 0 -20px;
             }
         }
     }
