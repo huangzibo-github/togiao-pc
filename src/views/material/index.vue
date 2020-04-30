@@ -25,6 +25,15 @@
                 </el-card>
             </el-tab-pane>
         </el-tabs>
+              <!-- 分页组件 -->
+        <el-row type='flex' justify='center' align='middle' style="height:80px">
+            <el-pagination background layout="prev, pager, next"
+            :current-page="page.currentPage"
+            :page-size="page.pageSize"
+            :total="page.total"
+            @current-change="changePage"
+            ></el-pagination>
+        </el-row>
   </el-card>
 </template>
 
@@ -33,10 +42,21 @@ export default {
   data () {
     return {
       activeName: 'all',
-      list: [] // 接收全部数据
+      list: [], // 接收全部数据
+      page: {
+        total: 0, // 数据总条数
+        pageSize: 10, // 默认每页10条
+        currentPage: 1 // 默认当前页码
+      }
     }
   },
   methods: {
+    //   改变当前页码事件
+    changePage (newPage) {
+      // 修改当前页码
+      this.page.currentPage = newPage
+      this.getAllMaterial()
+    },
     //   切换tab事件
     changeTab () {
       this.getAllMaterial() // 点击切换需要重新查询一次,只需要再调用一次方法
@@ -45,9 +65,14 @@ export default {
       this.$axios({
         url: '/user/images',
         // collect为false是查看所有  this.activeName === 'collect' 是查看收藏
-        params: { collect: this.activeName === 'collect' }
+        params: {
+          collect: this.activeName === 'collect',
+          page: this.page.currentPage,
+          per_page: this.page.pageSize
+        }
       }).then(result => {
         this.list = result.data.results
+        this.page.total = result.data.total_count // 获取素材总数
       })
     }
   },
