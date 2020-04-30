@@ -1,9 +1,15 @@
 <template>
-  <el-card>
+  <el-card v-loading='loading'>
       <bread-crumb slot="header">
         <template slot="title">素材管理</template>
       </bread-crumb>
-        <el-tabs v-model="activeName"  @tab-click="changeTab">
+      <!-- 上传按钮 -->
+      <el-row type='flex' justify='end'>
+          <el-upload :http-request='onLoad' :show-file-list='false'>
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
+      </el-row>
+      <el-tabs v-model="activeName"  @tab-click="changeTab">
             <el-tab-pane label="全部素材" name="all">
                 <!-- 全部素材内容 -->
                 <div class="img-list">
@@ -24,16 +30,16 @@
                     </el-row>
                 </el-card>
             </el-tab-pane>
-        </el-tabs>
-              <!-- 分页组件 -->
-        <el-row type='flex' justify='center' align='middle' style="height:80px">
-            <el-pagination background layout="prev, pager, next"
-            :current-page="page.currentPage"
-            :page-size="page.pageSize"
-            :total="page.total"
-            @current-change="changePage"
-            ></el-pagination>
-        </el-row>
+      </el-tabs>
+            <!-- 分页组件 -->
+      <el-row type='flex' justify='center' align='middle' style="height:80px">
+          <el-pagination background layout="prev, pager, next"
+          :current-page="page.currentPage"
+          :page-size="page.pageSize"
+          :total="page.total"
+          @current-change="changePage"
+          ></el-pagination>
+      </el-row>
   </el-card>
 </template>
 
@@ -47,10 +53,27 @@ export default {
         total: 0, // 数据总条数
         pageSize: 20, // 默认每页10条
         currentPage: 1 // 默认当前页码
-      }
+      },
+      loading: false
     }
   },
   methods: {
+    //   上传图片
+    onLoad (params) {
+      this.loading = true
+      // formdata 必须实例化
+      const form = new FormData()
+      form.append('image', params.file) // 添加文件到Formdata
+      this.$axios({
+        method: 'post',
+        url: '/user/images',
+        data: form
+      }).then(result => {
+        //   上传成功之后
+        this.getAllMaterial()
+        this.loading = false
+      })
+    },
     //   改变当前页码事件
     changePage (newPage) {
       // 修改当前页码
