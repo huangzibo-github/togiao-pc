@@ -45,7 +45,7 @@ export default {
       list: [], // 接收全部数据
       page: {
         total: 0, // 数据总条数
-        pageSize: 10, // 默认每页10条
+        pageSize: 20, // 默认每页10条
         currentPage: 1 // 默认当前页码
       }
     }
@@ -59,6 +59,7 @@ export default {
     },
     //   切换tab事件
     changeTab () {
+      this.page.currentPage = 1 // 应该把页码回到第一页
       this.getAllMaterial() // 点击切换需要重新查询一次,只需要再调用一次方法
     },
     getAllMaterial () {
