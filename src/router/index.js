@@ -26,6 +26,9 @@ const routes = [
     }, {
       path: 'material', // 素材列表
       component: () => import('../views/material')
+    }, {
+      path: 'articles',
+      component: () => import('../views/articles')
     }]
   }, {
     // 登录页
