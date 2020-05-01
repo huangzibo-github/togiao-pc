@@ -16,8 +16,9 @@
                     <el-card class="img-card" v-for="item in list" :key="item.id">
                         <img :src="item.url" alt="">
                         <el-row class="operate" type='flex' justify='space-around' align='middle'>
-                            <i class="el-icon-star-on"></i>
-                            <i class="el-icon-delete-solid"></i>
+                            <!-- v-bind:style 根据收藏状态显示图标颜色 -->
+                            <i @click="collectOrCancel(item)" :style="{color: item.is_collected ? 'red' : ''}" class="el-icon-star-on"></i>
+                            <i @click="delMaterial(item.id)" class="el-icon-delete-solid"></i>
                         </el-row>
                     </el-card>
                 </div>
@@ -58,6 +59,34 @@ export default {
     }
   },
   methods: {
+    //   删除素材
+    delMaterial (id) {
+      this.$confirm('您确定要删除该素材吗').then(() => {
+        //   只有点击了确定 才会执行
+        // 调用删除接口
+        // this.loading = true
+        this.$axios({
+          method: 'delete',
+          url: `/user/images/${id}`
+        }).then(() => {
+          this.getAllMaterial()
+        })
+      })
+    },
+    //   收藏或者取消收藏
+    collectOrCancel (row) {
+      // 调用收藏或取消收藏接口
+      this.$axios({
+        method: 'put',
+        // 动态接口，使用模板字符串
+        url: `/user/images/${row.id}`,
+        data: {
+          collect: !row.is_collected // 状态取反  收藏=>取消 取消=>收藏
+        }
+      }).then(() => {
+        this.getAllMaterial()
+      })
+    },
     //   上传图片
     onLoad (params) {
       this.loading = true
@@ -129,6 +158,9 @@ export default {
                 bottom: 0;
                 left: 0;
                 height: 30px;
+                i {
+                    cursor: pointer;
+                }
             }
         }
         .img-list2 {
