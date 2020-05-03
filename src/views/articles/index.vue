@@ -50,7 +50,7 @@
       </el-row>
 <!-- 主体结构 -->
     <el-row class="total">
-        <span>共找到xx条符合条件的数据</span>
+        <span>共找到{{page.total}}条符合条件的数据</span>
     </el-row>
     <!-- 循环模板                        key要转换成字符串          -->
     <el-row v-for="item in list" :key='item.id.toString()' class="articleItem" type='flex' justify='space-between'>
@@ -74,6 +74,15 @@
             </el-row>
         </el-col>
     </el-row>
+<!-- 分页组件 -->
+      <el-row type='flex' justify='center' align='middle' style="height:80px">
+          <el-pagination background layout="prev, pager, next"
+          :current-page="page.currentPage"
+          :page-size="page.pageSize"
+          :total="page.total"
+          @current-change="changePage"
+          ></el-pagination>
+      </el-row>
   </el-card>
 </template>
 
@@ -88,7 +97,12 @@ export default {
       },
       channels: [],
       list: [], // 接收文章列表数据
-      defaultImg: require('../../assets/img/404.png')
+      defaultImg: require('../../assets/img/404.png'),
+      page: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 0
+      }
     }
   },
   filters: {
@@ -123,10 +137,11 @@ export default {
     }
   },
   methods: {
-    //   改变条件
-    changeCondition () {
-      // 组装条件
+    //   封装方法
+    getArticlesCondition () {
       const params = {
+        page: this.page.currentPage, // 切换条件，默认回到第一页
+        per_page: this.page.pageSize,
         status: this.formData.status === 5 ? null : this.formData.status,
         channel_id: this.formData.channel_id, // 频道
         //  因为formData.dateRange是数组 所以需要判断一下，看formData.dateRange 的长度
@@ -135,6 +150,17 @@ export default {
       }
       this.getArticles(params)
     },
+    changePage (newPage) {
+      // 赋值当前页码
+      this.page.currentPage = newPage
+      this.getArticlesCondition()
+    },
+    //   改变条件
+    changeCondition () {
+      // 组装条件
+      this.page.currentPage = 1 // 强制将当前页码回到第一页
+      this.getArticlesCondition()
+    },
     //   获取文章列表数据 , 根据筛选条件需要传参params，并接收
     getArticles (params) {
       this.$axios({
@@ -142,6 +168,7 @@ export default {
         params
       }).then(result => {
         this.list = result.data.results
+        this.page.total = result.data.total_count
       })
     },
     //   获取频道
@@ -155,7 +182,7 @@ export default {
   },
   created () {
     this.getChannels()
-    this.getArticles()
+    this.getArticles({ page: 1, per_page: 10 })
   }
 }
 </script>

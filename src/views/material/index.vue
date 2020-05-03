@@ -32,7 +32,7 @@
                 </el-card>
             </el-tab-pane>
       </el-tabs>
-            <!-- 分页组件 -->
+<!-- 分页组件 -->
       <el-row type='flex' justify='center' align='middle' style="height:80px">
           <el-pagination background layout="prev, pager, next"
           :current-page="page.currentPage"
