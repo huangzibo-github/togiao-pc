@@ -56,6 +56,26 @@ export default {
       }
     }
   },
+  watch: {
+    $route: function (to, from) {
+      // to里有一个path,就是要去的地址，还有一个属性叫params,表示这里边的id,判断这里有没有id,也就是判断该对象的长度
+      // es6语法有一个语法叫Object.keys 可以将对象中的属性变成一个数组,判断数组长度即可
+      if (Object.keys(to.params).length) {
+        //   有参数就是修改
+      } else {
+        // 没有参数,就还是发布页面
+        this.formData = {
+          title: '', // 标题
+          content: '', // 文章内容
+          cover: { // 封面
+            type: 0, // -1 自动， 0 无图， 1 一张 ，3 三张
+            images: [] // 存储的图片地址
+          },
+          channel_id: null // 频道id
+        }
+      }
+    }
+  },
   methods: {
     //   发布文章
     publishArticle (draft) {

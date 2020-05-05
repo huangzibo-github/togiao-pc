@@ -69,7 +69,7 @@
         <!-- 右侧 -->
         <el-col class="right" :span='6'>
             <el-row type='flex' justify='end'>
-                <span><i class="el-icon-edit"></i>修改</span>
+                <span @click="toModify(item.id)"><i class="el-icon-edit"></i>修改</span>
                 <span @click="deleteArticle(item.id)"><i class="el-icon-delete"></i>删除</span>
             </el-row>
         </el-col>
@@ -105,6 +105,13 @@ export default {
       }
     }
   },
+  Watch: {
+    formData: {
+      handler () {
+        this.changeCondition()
+      }
+    }
+  },
   filters: {
     filterStatus (value) {
       // value 是过滤器前面表达式计算得到的值
@@ -137,6 +144,11 @@ export default {
     }
   },
   methods: {
+    // 去修改页面
+    toModify (id) {
+      //  因为是大数字类型，所以需要toString()
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     //   删除文章
     deleteArticle (id) {
     //   this.$confirm('您确定要删除吗').then(() => {

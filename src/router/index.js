@@ -30,6 +30,11 @@ const routes = [
       path: 'articles',
       component: () => import('../views/articles')
     }, {
+      // 定义动态路由参数 此规则只匹配 修改文章
+      path: 'publish/:articleId',
+      component: () => import('../views/publish')
+    }, {
+      // 此规则匹配发布文章
       path: 'publish',
       component: () => import('../views/publish')
     }]
