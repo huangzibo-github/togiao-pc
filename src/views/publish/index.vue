@@ -81,14 +81,33 @@ export default {
     publishArticle (draft) {
       this.$refs.publishForm.validate((isOk) => {
         if (isOk) {
-        //   console.log('校验成功')
+          const { articleId } = this.$route.params
+          // if (articleId) {
+          //   this.$axios({
+          //     url: `/article/${articleId}`,
+          //     params: { draft }, // query参数
+          //     data: this.formData
+          //   }).then(() => {
+          //     this.$router.push('/home/articles')
+          //   })
+          // } else {
+          //   //   console.log('校验成功')
+          //   this.$axios({
+          //     url: '/articles',
+          //     method: 'post',
+          //     params: { draft },
+          //     data: this.formData
+          //   }).then(() => {
+          //   //   新增成功应该回到内容列表
+          //     this.$router.push('/home/articles')
+          //   })
+          // }
           this.$axios({
-            url: '/articles',
-            method: 'post',
+            method: articleId ? 'put' : 'post',
+            url: articleId ? `/articles/${articleId}` : '/articles',
             params: { draft },
             data: this.formData
-          }).then(() => {
-            //   新增成功应该回到内容列表
+          }).then(result => {
             this.$router.push('/home/articles')
           })
         }
@@ -101,10 +120,21 @@ export default {
       }).then(result => {
         this.channels = result.data.channels
       })
+    },
+    getArticleById (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(result => {
+        this.formData = result.data // 将指定文章数据给data数据
+      })
     }
   },
   created () {
     this.getChannels()
+    // 获取id,判断你有无id,有就是修改,没有就是发布
+    // 获取动态路由参数 articleId已经是字符串
+    const { articleId } = this.$route.params
+    articleId && this.getArticleById(articleId)
   }
 }
 </script>
