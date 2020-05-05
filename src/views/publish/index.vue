@@ -18,7 +18,10 @@
                   <el-radio :label="0">无图</el-radio>
                   <el-radio :label="-1">自动</el-radio>
               </el-radio-group>
+              {{formData.cover}}
           </el-form-item>
+          <!-- 放置一个封面组件  需要用到组件传值父传子 props -->
+          <cover-image :list="formData.cover.images"></cover-image>
           <el-form-item prop="channel_id" label="频道">
               <el-select v-model="formData.channel_id">
                   <el-option v-for="item in channels" :value="item.id" :label="item.name" :key="item.id"></el-option>
@@ -62,6 +65,7 @@ export default {
       // es6语法有一个语法叫Object.keys 可以将对象中的属性变成一个数组,判断数组长度即可
       if (Object.keys(to.params).length) {
         //   有参数就是修改
+        this.getArticleById(to.params.articleId) // 重新拉取数据
       } else {
         // 没有参数,就还是发布页面
         this.formData = {
@@ -73,6 +77,19 @@ export default {
           },
           channel_id: null // 频道id
         }
+      }
+    },
+    // 监控嵌套对象中的值
+    'formData.cover.type': function () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        // 无图或自动模式
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) {
+        // 单图模式
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        // 三图模式
+        this.formData.cover.images = ['', '', '']
       }
     }
   },
