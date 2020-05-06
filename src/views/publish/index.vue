@@ -12,7 +12,7 @@
               <quill-editor style="height:400px" v-model="formData.content" type='textarea' :row='4'></quill-editor>
           </el-form-item>
           <el-form-item prop="type" label="封面" style="margin-top:100px">
-              <el-radio-group v-model="formData.cover.type">
+              <el-radio-group @change="changeType" v-model="formData.cover.type">
                   <el-radio :label="1">单图</el-radio>
                   <el-radio :label="3">三图</el-radio>
                   <el-radio :label="0">无图</el-radio>
@@ -94,6 +94,19 @@ export default {
     }
   },
   methods: {
+    // type改变触发事件  只有点击切换时才会触发
+    changeType () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        // 无图或自动模式
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) {
+        // 单图模式
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        // 三图模式
+        this.formData.cover.images = ['', '', '']
+      }
+    },
     //   发布文章
     publishArticle (draft) {
       this.$refs.publishForm.validate((isOk) => {

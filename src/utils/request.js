@@ -13,9 +13,10 @@ axios.interceptors.request.use(function (config) {
   return config // 返回的config就会作为新的请求选项去进行请求
 }, function () {
   // 第二个参数 请求失败时执行
+  // return Promise.reject(error)
 })
 axios.defaults.transformResponse = [function (data) {
-  return JSONBig.parse(data) // 用JSONBig.parse(data)替换之前的JSON.parse(data)
+  return data ? JSONBig.parse(data) : data // 用JSONBig.parse(data)替换之前的JSON.parse(data)
 }]
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
