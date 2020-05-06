@@ -4,7 +4,7 @@
         <template slot="title">账户信息</template>
       </bread-crumb>
       <!-- 上传组件 -->
-      <el-upload class="head-upload" action="" :show-file-list="false">
+      <el-upload :http-request="uploadImg" class="head-upload" action="" :show-file-list="false">
           <img :src="formData.photo ? formData.photo : defaultImg" alt="">
       </el-upload>
       <!-- 放置组件 -->
@@ -58,6 +58,20 @@ export default {
     }
   },
   methods: {
+    //   上传图片
+    uploadImg (params) {
+      this.loading = true
+      const data = new FormData()
+      data.append('photo', params.file) // 加入参数
+      this.$axios({
+        url: 'user/photo',
+        data,
+        method: 'patch'
+      }).then(result => {
+        this.formData.photo = result.data.photo // 设置头像地址
+        this.loading = false
+      })
+    },
     //   保存用户信息
     saveUserInfo () {
       // 校验表单数据是否ok
