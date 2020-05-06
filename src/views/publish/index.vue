@@ -78,19 +78,6 @@ export default {
           channel_id: null // 频道id
         }
       }
-    },
-    // 监控嵌套对象中的值
-    'formData.cover.type': function () {
-      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
-        // 无图或自动模式
-        this.formData.cover.images = []
-      } else if (this.formData.cover.type === 1) {
-        // 单图模式
-        this.formData.cover.images = ['']
-      } else if (this.formData.cover.type === 3) {
-        // 三图模式
-        this.formData.cover.images = ['', '', '']
-      }
     }
   },
   methods: {
