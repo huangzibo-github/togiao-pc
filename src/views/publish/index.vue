@@ -18,10 +18,9 @@
                   <el-radio :label="0">无图</el-radio>
                   <el-radio :label="-1">自动</el-radio>
               </el-radio-group>
-              {{formData.cover}}
           </el-form-item>
           <!-- 放置一个封面组件  需要用到组件传值父传子 props -->
-          <cover-image :list="formData.cover.images"></cover-image>
+          <cover-image @clickOngImg="receiveImg" :list="formData.cover.images"></cover-image>
           <el-form-item prop="channel_id" label="频道">
               <el-select v-model="formData.channel_id">
                   <el-option v-for="item in channels" :value="item.id" :label="item.name" :key="item.id"></el-option>
@@ -81,6 +80,19 @@ export default {
     }
   },
   methods: {
+    receiveImg (img, index) {
+      // 接收到数据之后 修改images数组
+      // this.formData.cover.images[index] = img 这样不能被Vue监控到
+      // 当数组变成新数组就会触发响应式视图更新    将新数组赋值到原数组
+      // this.formData.cover.images = this.formData.cover.images.map(function (item, i) {
+      //   if (i === index) {
+      //     return img
+      //   }
+      //   return item
+      // })
+      // 简写
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? img : item)
+    },
     // type改变触发事件  只有点击切换时才会触发
     changeType () {
       if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
