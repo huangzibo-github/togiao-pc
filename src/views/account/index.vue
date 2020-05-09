@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus.js'
 export default {
   data () {
     return {
@@ -86,6 +87,7 @@ export default {
               type: 'success',
               message: '保存信息成功'
             })
+            eventBus.$emit('updateUserInfoSuccess') // 触发一个自定义事件 updateUserInfoSuccess
           })
         }
       })

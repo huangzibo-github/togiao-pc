@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus' // 引入公共实例
 export default {
   data () {
     return {
@@ -38,21 +39,30 @@ export default {
     }
   },
   created () {
-    // 直接通过axios查询个人信息
-    this.$axios({
-      url: '/user/profile'
-    }).then(result => {
-      // console.log(result.data)
-      this.userInfo = result.data // 获取用户个人信息
+    this.getUserInfo()
+    // 实例创建完毕 立刻监听
+    eventBus.$on('updateUserInfoSuccess', () => {
+      this.getUserInfo()
     })
   },
   methods: {
+    getUserInfo () {
+      // 直接通过axios查询个人信息
+      this.$axios({
+        url: '/user/profile'
+      }).then(result => {
+      // console.log(result.data)
+        this.userInfo = result.data // 获取用户个人信息
+      })
+    },
     handleCommand (command) {
       if (command === 'exit') {
         window.localStorage.removeItem('user-token') // 删除令牌
         this.$router.push('/login') // 跳转回登录页
       } else if (command === 'git') {
         window.location.href = 'https://github.com/shuiruohanyu/89heimatoutiao'
+      } else if (command === 'info') {
+        this.$router.push('/home/account')
       }
     }
   }
