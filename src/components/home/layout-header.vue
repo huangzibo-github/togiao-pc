@@ -54,14 +54,13 @@ export default {
       // 通知要改变宽度的组件
       eventBus.$emit('changeCollaspse')
     },
-    getUserInfo () {
+    async getUserInfo () {
       // 直接通过axios查询个人信息
-      this.$axios({
+      const result = await this.$axios({
         url: '/user/profile'
-      }).then(result => {
-      // console.log(result.data)
-        this.userInfo = result.data // 获取用户个人信息
       })
+      // console.log(result.data)
+      this.userInfo = result.data // 获取用户个人信息
     },
     handleCommand (command) {
       if (command === 'exit') {

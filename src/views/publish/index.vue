@@ -107,56 +107,52 @@ export default {
       }
     },
     //   发布文章
-    publishArticle (draft) {
-      this.$refs.publishForm.validate((isOk) => {
-        if (isOk) {
-          const { articleId } = this.$route.params
-          // if (articleId) {
-          //   this.$axios({
-          //     url: `/article/${articleId}`,
-          //     params: { draft }, // query参数
-          //     data: this.formData
-          //   }).then(() => {
-          //     this.$router.push('/home/articles')
-          //   })
-          // } else {
-          //   //   console.log('校验成功')
-          //   this.$axios({
-          //     url: '/articles',
-          //     method: 'post',
-          //     params: { draft },
-          //     data: this.formData
-          //   }).then(() => {
-          //   //   新增成功应该回到内容列表
-          //     this.$router.push('/home/articles')
-          //   })
-          // }
-          // 代码优化！！---------------!!！
-          this.$axios({
-            method: articleId ? 'put' : 'post',
-            url: articleId ? `/articles/${articleId}` : '/articles',
-            params: { draft },
-            data: this.formData
-          }).then(result => {
-            this.$router.push('/home/articles')
-          })
-        }
+    async publishArticle (draft) {
+      await this.$refs.publishForm.validate((isOk) => {
+        if (isOk) {}
       })
+      const { articleId } = this.$route.params
+      // if (articleId) {
+      //   this.$axios({
+      //     url: `/article/${articleId}`,
+      //     params: { draft }, // query参数
+      //     data: this.formData
+      //   }).then(() => {
+      //     this.$router.push('/home/articles')
+      //   })
+      // } else {
+      //   //   console.log('校验成功')
+      //   this.$axios({
+      //     url: '/articles',
+      //     method: 'post',
+      //     params: { draft },
+      //     data: this.formData
+      //   }).then(() => {
+      //   //   新增成功应该回到内容列表
+      //     this.$router.push('/home/articles')
+      //   })
+      // }
+      // 代码优化！！---------------!!！
+      await this.$axios({
+        method: articleId ? 'put' : 'post',
+        url: articleId ? `/articles/${articleId}` : '/articles',
+        params: { draft },
+        data: this.formData
+      })
+      this.$router.push('/home/articles')
     },
     //   获取频道数据
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      const result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     },
-    getArticleById (articleId) {
-      this.$axios({
+    async getArticleById (articleId) {
+      const result = await this.$axios({
         url: `/articles/${articleId}`
-      }).then(result => {
-        this.formData = result.data // 将指定文章数据给data数据
       })
+      this.formData = result.data // 将指定文章数据给data数据
     }
   },
   created () {

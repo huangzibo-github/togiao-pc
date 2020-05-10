@@ -112,6 +112,7 @@ export default {
       }
     }
   },
+  // 过滤器
   filters: {
     filterStatus (value) {
       // value 是过滤器前面表达式计算得到的值
@@ -150,34 +151,19 @@ export default {
       this.$router.push(`/home/publish/${id.toString()}`)
     },
     //   删除文章
-    deleteArticle (id) {
-    //   this.$confirm('您确定要删除吗').then(() => {
-    //     this.$axios({
-    //       url: `/articles/${id.toString()}`,
-    //       method: 'delete'
-    //     }).then(() => {
-    //       this.$message({
-    //         type: 'success',
-    //         message: '删除文章成功'
-    //       })
-    //       this.getArticlesCondition()
-    //     })
-    //   })
-      // 所有已发布的文章是不可以删除的  只有草稿才可以删除
-      this.$confirm('您是否要删除这个文章?').then(() => {
+    async deleteArticle (id) {
+      await this.$confirm('您是否要删除这个文章?')
       // 直接删除
-        this.$axios({
-          method: 'delete',
-          url: `/articles/${id.toString()}`
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除文章成功!'
-          })
-          // this.page.currentPage = 1 // 如果想回第一个页 就赋值 为1 否则不用管
-          this.getArticlesCondition() // 重新调用
-        })
+      await this.$axios({
+        method: 'delete',
+        url: `/articles/${id.toString()}`
       })
+      this.$message({
+        type: 'success',
+        message: '删除文章成功!'
+      })
+      // this.page.currentPage = 1 // 如果想回第一个页 就赋值 为1 否则不用管
+      this.getArticlesCondition() // 重新调用
     },
     //   封装方法
     getArticlesCondition () {
@@ -204,22 +190,20 @@ export default {
       this.getArticlesCondition()
     },
     //   获取文章列表数据 , 根据筛选条件需要传参params，并接收
-    getArticles (params) {
-      this.$axios({
+    async getArticles (params) {
+      const result = await this.$axios({
         url: '/articles',
         params
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count
     },
     //   获取频道
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      const result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     }
   },
   created () {

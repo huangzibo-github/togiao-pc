@@ -40,17 +40,16 @@ export default {
   },
   methods: {
     // 上传图片
-    uploadImg (params) {
+    async uploadImg (params) {
       const data = new FormData() // 实例化一个对象
       data.append('image', params.file) // 添加文件参数
-      this.$axios({
+      const result = await this.$axios({
         url: '/user/images',
         data,
         method: 'post'
-      }).then(result => {
-        // result.data.url
-        this.$emit('selectOneImg', result.data.url)
       })
+      // result.data.url
+      this.$emit('selectOneImg', result.data.url)
     },
     clickImg (url) {
       // 需要将图片地址传出去 子传父
@@ -60,18 +59,17 @@ export default {
       this.page.currentPage = newPage
       this.getAllImg()
     },
-    getAllImg () {
-      this.$axios({
+    async getAllImg () {
+      const result = await this.$axios({
         url: '/user/images',
         params: {
           collect: false, // 获取全部数据
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count // 赋值总数
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count // 赋值总数
     }
   },
   created () {

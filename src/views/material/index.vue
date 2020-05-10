@@ -60,48 +60,41 @@ export default {
   },
   methods: {
     //   删除素材
-    delMaterial (id) {
-      this.$confirm('您确定要删除该素材吗').then(() => {
-        //   只有点击了确定 才会执行
-        // 调用删除接口
-        // this.loading = true
-        this.$axios({
-          method: 'delete',
-          url: `/user/images/${id}`
-        }).then(() => {
-          this.getAllMaterial()
-        })
+    async delMaterial (id) {
+      await this.$confirm('您确定要删除该素材吗')
+      await this.$axios({
+        method: 'delete',
+        url: `/user/images/${id}`
       })
+      this.getAllMaterial()
     },
     //   收藏或者取消收藏
-    collectOrCancel (row) {
+    async collectOrCancel (row) {
       // 调用收藏或取消收藏接口
-      this.$axios({
+      await this.$axios({
         method: 'put',
         // 动态接口，使用模板字符串
         url: `/user/images/${row.id}`,
         data: {
           collect: !row.is_collected // 状态取反  收藏=>取消 取消=>收藏
         }
-      }).then(() => {
-        this.getAllMaterial()
       })
+      this.getAllMaterial()
     },
     //   上传图片
-    onLoad (params) {
+    async onLoad (params) {
       this.loading = true
       // formdata 必须实例化
       const form = new FormData()
       form.append('image', params.file) // 添加文件到Formdata
-      this.$axios({
+      await this.$axios({
         method: 'post',
         url: '/user/images',
         data: form
-      }).then(result => {
-        //   上传成功之后
-        this.getAllMaterial()
-        this.loading = false
       })
+      //   上传成功之后
+      this.getAllMaterial()
+      this.loading = false
     },
     //   改变当前页码事件
     changePage (newPage) {
@@ -114,8 +107,8 @@ export default {
       this.page.currentPage = 1 // 应该把页码回到第一页
       this.getAllMaterial() // 点击切换需要重新查询一次,只需要再调用一次方法
     },
-    getAllMaterial () {
-      this.$axios({
+    async getAllMaterial () {
+      const result = await this.$axios({
         url: '/user/images',
         // collect为false是查看所有  this.activeName === 'collect' 是查看收藏
         params: {
@@ -123,10 +116,9 @@ export default {
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count // 获取素材总数
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count // 获取素材总数
     }
   },
   created () {

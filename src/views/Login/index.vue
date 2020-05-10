@@ -65,29 +65,27 @@ export default {
   },
   methods: {
     //   提交登录表单
-    submitLogin () {
-      this.$refs.myForm.validate((isOk) => {
+    async submitLogin () {
+      await this.$refs.myForm.validate((isOk) => {
         if (isOk) {
           //   认为前端校验登录表单成功
           console.log('前端校验成功，发送用户名和密码到后台')
-          this.$axios({
-            // 地址参数、查询参数 放在params对象里
-            // body参数  放在对象里
-            url: '/authorizations', // 请求地址
-            method: 'post',
-            data: this.loginForm
-          }).then(result => {
-            console.log(result)
-            window.localStorage.setItem('user-token', result.data.token)
-            // 调用localStorage的setItem方法，将token保存在本地
-            this.$router.push('/home')
-            // 登陆成功之后的提示
-            this.$message({
-              message: '登陆成功',
-              type: 'success'
-            })
-          })
         }
+      })
+      const result = await this.$axios({
+        // 地址参数、查询参数 放在params对象里
+        // body参数  放在对象里
+        url: '/authorizations', // 请求地址
+        method: 'post',
+        data: this.loginForm
+      })
+      window.localStorage.setItem('user-token', result.data.token)
+      // 调用localStorage的setItem方法，将token保存在本地
+      this.$router.push('/home')
+      // 登陆成功之后的提示
+      this.$message({
+        message: '登陆成功',
+        type: 'success'
       })
     }
   }

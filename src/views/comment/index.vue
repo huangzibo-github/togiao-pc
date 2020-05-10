@@ -55,21 +55,22 @@ export default {
       this.getComment()
     },
     //   请求评论列表数据
-    getComment () {
+    async getComment () {
+      this.loading = true
       // axios 默认是get类型
       // query 查询参数
-      this.$axios({
+      // await 强制等待到后面是promise执行完毕
+      const result = await this.$axios({
         url: '/articles',
         params: {
           response_type: 'comment',
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results // 获取评论列表数据给本身data
-        this.page.total = result.data.total_count // 获取文章总条数
-        this.loading = false
       })
+      this.list = result.data.results // 获取评论列表数据给本身data
+      this.page.total = result.data.total_count // 获取文章总条数
+      this.loading = false
     },
     // 定义一个布尔值转换方法
     formatterBool (row, column, cellValue, index) {
@@ -79,27 +80,26 @@ export default {
       // index 当前下标
       return cellValue ? '正常' : '关闭'
     },
-    openOrClose (row) {
+    // 打开或者关闭评论
+    async openOrClose (row) {
       const mess = row.comment_status ? '关闭' : '打开'
-      this.$confirm(`您确定要${mess}评论吗`).then(() => {
-        this.$axios({
-          method: 'put',
-          url: '/comments/status',
-          params: {
-            article_id: row.id.toString()
-          },
-          data: {
-            allow_comment: !row.comment_status
-          }
-        }).then(result => {
-        //   打开或者关闭评论成功之后
-          this.$message({
-            type: 'success',
-            message: '操作成功'
-          })
-          this.getComment() // 重新请求列表
-        })
+      await this.$confirm(`您确定要${mess}评论吗`)
+      await this.$axios({
+        method: 'put',
+        url: '/comments/status',
+        params: {
+          article_id: row.id.toString()
+        },
+        data: {
+          allow_comment: !row.comment_status
+        }
       })
+      //   打开或者关闭评论成功之后
+      this.$message({
+        type: 'success',
+        message: '操作成功'
+      })
+      this.getComment() // 重新请求列表
     }
   },
   created () {

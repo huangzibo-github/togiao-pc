@@ -60,45 +60,42 @@ export default {
   },
   methods: {
     //   上传图片
-    uploadImg (params) {
+    async uploadImg (params) {
       this.loading = true
       const data = new FormData()
       data.append('photo', params.file) // 加入参数
-      this.$axios({
+      const result = await this.$axios({
         url: 'user/photo',
         data,
         method: 'patch'
-      }).then(result => {
-        this.formData.photo = result.data.photo // 设置头像地址
-        this.loading = false
       })
+      this.formData.photo = result.data.photo // 设置头像地址
+      this.loading = false
     },
     //   保存用户信息
-    saveUserInfo () {
+    async saveUserInfo () {
       // 校验表单数据是否ok
-      this.$refs.myForm.validate((isOK) => {
+      await this.$refs.myForm.validate((isOK) => {
         if (isOK) {
           this.$axios({
             url: 'user/profile',
             method: 'patch',
             data: this.formData
-          }).then(result => {
-            this.$message({
-              type: 'success',
-              message: '保存信息成功'
-            })
-            eventBus.$emit('updateUserInfoSuccess') // 触发一个自定义事件 updateUserInfoSuccess
           })
         }
       })
+      await this.$message({
+        type: 'success',
+        message: '保存信息成功'
+      })
+      eventBus.$emit('updateUserInfoSuccess') // 触发一个自定义事件 updateUserInfoSuccess
     },
     //   获取用户信息
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      const result = await this.$axios({
         url: '/user/profile'
-      }).then(result => {
-        this.formData = result.data
       })
+      this.formData = result.data
     }
   },
   created () {
