@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { getComment, openOrClose } from '../../actions/comment'
 export default {
   data () {
     return {
@@ -59,15 +60,13 @@ export default {
       this.loading = true
       // axios 默认是get类型
       // query 查询参数
+      const params = {
+        response_type: 'comment',
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
+      }
       // await 强制等待到后面是promise执行完毕
-      const result = await this.$axios({
-        url: '/articles',
-        params: {
-          response_type: 'comment',
-          page: this.page.currentPage,
-          per_page: this.page.pageSize
-        }
-      })
+      const result = await getComment(params)
       this.list = result.data.results // 获取评论列表数据给本身data
       this.page.total = result.data.total_count // 获取文章总条数
       this.loading = false
@@ -84,16 +83,9 @@ export default {
     async openOrClose (row) {
       const mess = row.comment_status ? '关闭' : '打开'
       await this.$confirm(`您确定要${mess}评论吗`)
-      await this.$axios({
-        method: 'put',
-        url: '/comments/status',
-        params: {
-          article_id: row.id.toString()
-        },
-        data: {
-          allow_comment: !row.comment_status
-        }
-      })
+      const params = { article_id: row.id.toString() }
+      const data = { allow_comment: !row.comment_status }
+      await openOrClose(params, data)
       //   打开或者关闭评论成功之后
       this.$message({
         type: 'success',

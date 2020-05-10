@@ -30,6 +30,7 @@
 
 <script>
 import eventBus from '../../utils/eventBus.js'
+import { getUserInfo, saveUserInfo, uploadImg } from '../../actions/account'
 export default {
   data () {
     return {
@@ -64,11 +65,7 @@ export default {
       this.loading = true
       const data = new FormData()
       data.append('photo', params.file) // 加入参数
-      const result = await this.$axios({
-        url: 'user/photo',
-        data,
-        method: 'patch'
-      })
+      const result = await uploadImg(data)
       this.formData.photo = result.data.photo // 设置头像地址
       this.loading = false
     },
@@ -77,11 +74,8 @@ export default {
       // 校验表单数据是否ok
       await this.$refs.myForm.validate((isOK) => {
         if (isOK) {
-          this.$axios({
-            url: 'user/profile',
-            method: 'patch',
-            data: this.formData
-          })
+          const data = this.formData
+          saveUserInfo(data)
         }
       })
       await this.$message({
@@ -92,9 +86,7 @@ export default {
     },
     //   获取用户信息
     async getUserInfo () {
-      const result = await this.$axios({
-        url: '/user/profile'
-      })
+      const result = await getUserInfo()
       this.formData = result.data
     }
   },

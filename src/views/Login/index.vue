@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { submitLogin } from '../../actions/login'
 export default {
   // 第一步，在data中定义表单数据对象
   data () {
@@ -72,13 +73,8 @@ export default {
           console.log('前端校验成功，发送用户名和密码到后台')
         }
       })
-      const result = await this.$axios({
-        // 地址参数、查询参数 放在params对象里
-        // body参数  放在对象里
-        url: '/authorizations', // 请求地址
-        method: 'post',
-        data: this.loginForm
-      })
+      const data = this.loginForm
+      const result = await submitLogin(data)
       window.localStorage.setItem('user-token', result.data.token)
       // 调用localStorage的setItem方法，将token保存在本地
       this.$router.push('/home')

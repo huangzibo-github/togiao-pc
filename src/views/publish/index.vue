@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { publishArticle, getChannels, getArticleById } from '../../actions/publish'
 export default {
   data () {
     return {
@@ -133,6 +134,10 @@ export default {
       //   })
       // }
       // 代码优化！！---------------!!！
+      const method = articleId ? 'put' : 'post'
+      const params = { draft }
+      const data = this.formData
+      await publishArticle(articleId, method, params, data)
       await this.$axios({
         method: articleId ? 'put' : 'post',
         url: articleId ? `/articles/${articleId}` : '/articles',
@@ -143,15 +148,12 @@ export default {
     },
     //   获取频道数据
     async getChannels () {
-      const result = await this.$axios({
-        url: '/channels'
-      })
+      const result = await getChannels()
       this.channels = result.data.channels
     },
+    // 获取文章id
     async getArticleById (articleId) {
-      const result = await this.$axios({
-        url: `/articles/${articleId}`
-      })
+      const result = await getArticleById(articleId)
       this.formData = result.data // 将指定文章数据给data数据
     }
   },

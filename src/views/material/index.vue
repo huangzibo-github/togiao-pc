@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { delMaterial, collectOrCancel, onLoad, getAllMaterial } from '../../actions/material'
 export default {
   data () {
     return {
@@ -62,23 +63,19 @@ export default {
     //   删除素材
     async delMaterial (id) {
       await this.$confirm('您确定要删除该素材吗')
-      await this.$axios({
-        method: 'delete',
-        url: `/user/images/${id}`
-      })
+      // await this.$axios({
+      //   method: 'delete',
+      //   url: `/user/images/${id}`
+      // })
+      await delMaterial(id)
       this.getAllMaterial()
     },
     //   收藏或者取消收藏
     async collectOrCancel (row) {
+      const data = { collect: !row.is_collected }
+      const id = row.id
       // 调用收藏或取消收藏接口
-      await this.$axios({
-        method: 'put',
-        // 动态接口，使用模板字符串
-        url: `/user/images/${row.id}`,
-        data: {
-          collect: !row.is_collected // 状态取反  收藏=>取消 取消=>收藏
-        }
-      })
+      await collectOrCancel(data, id)
       this.getAllMaterial()
     },
     //   上传图片
@@ -87,11 +84,8 @@ export default {
       // formdata 必须实例化
       const form = new FormData()
       form.append('image', params.file) // 添加文件到Formdata
-      await this.$axios({
-        method: 'post',
-        url: '/user/images',
-        data: form
-      })
+      const data = form
+      await onLoad(data)
       //   上传成功之后
       this.getAllMaterial()
       this.loading = false
@@ -108,15 +102,12 @@ export default {
       this.getAllMaterial() // 点击切换需要重新查询一次,只需要再调用一次方法
     },
     async getAllMaterial () {
-      const result = await this.$axios({
-        url: '/user/images',
-        // collect为false是查看所有  this.activeName === 'collect' 是查看收藏
-        params: {
-          collect: this.activeName === 'collect',
-          page: this.page.currentPage,
-          per_page: this.page.pageSize
-        }
-      })
+      const params = {
+        collect: this.activeName === 'collect',
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
+      }
+      const result = await getAllMaterial(params)
       this.list = result.data.results
       this.page.total = result.data.total_count // 获取素材总数
     }

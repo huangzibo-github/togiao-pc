@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { getArticles, getChannels, deleteArticle } from '../../actions/articles'
 export default {
   data () {
     return {
@@ -154,10 +155,7 @@ export default {
     async deleteArticle (id) {
       await this.$confirm('您是否要删除这个文章?')
       // 直接删除
-      await this.$axios({
-        method: 'delete',
-        url: `/articles/${id.toString()}`
-      })
+      await deleteArticle(id)
       this.$message({
         type: 'success',
         message: '删除文章成功!'
@@ -191,18 +189,13 @@ export default {
     },
     //   获取文章列表数据 , 根据筛选条件需要传参params，并接收
     async getArticles (params) {
-      const result = await this.$axios({
-        url: '/articles',
-        params
-      })
+      const result = await getArticles(params)
       this.list = result.data.results
       this.page.total = result.data.total_count
     },
     //   获取频道
     async getChannels () {
-      const result = await this.$axios({
-        url: '/channels'
-      })
+      const result = await getChannels()
       this.channels = result.data.channels
     }
   },

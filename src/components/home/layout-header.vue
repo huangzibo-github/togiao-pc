@@ -32,6 +32,7 @@
 
 <script>
 import eventBus from '../../utils/eventBus' // 引入公共实例
+import { getUserInfo } from '../../actions/account'
 export default {
   data () {
     return {
@@ -56,9 +57,7 @@ export default {
     },
     async getUserInfo () {
       // 直接通过axios查询个人信息
-      const result = await this.$axios({
-        url: '/user/profile'
-      })
+      const result = await getUserInfo()
       // console.log(result.data)
       this.userInfo = result.data // 获取用户个人信息
     },
