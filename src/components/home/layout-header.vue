@@ -2,7 +2,8 @@
   <el-row class="layout-header" type='flex' justify='space-between' align='middle'>
       <!-- 左侧 -->
       <el-col class="left" :span='6'>
-          <i class="el-icon-s-unfold"></i>
+        <!-- :class 后面是一个 对象 -->
+          <i @click="collaspseOrOpen" :class="{'el-icon-s-unfold': collaspse,'el-icon-s-fold': !collaspse}"></i>
           <span class="title">江苏弱智博客教育科技股份有限公司</span>
       </el-col>
       <!-- 右侧 -->
@@ -34,6 +35,7 @@ import eventBus from '../../utils/eventBus' // 引入公共实例
 export default {
   data () {
     return {
+      collaspse: false,
       userInfo: {}, // 个人信息
       defaultImg: require('../../assets/img/avatar.jpg') // 先把地址转换成变量，再进行三元表达式判断
     }
@@ -46,6 +48,12 @@ export default {
     })
   },
   methods: {
+    // 折叠或者打开
+    collaspseOrOpen () {
+      this.collaspse = !this.collaspse // 取反
+      // 通知要改变宽度的组件
+      eventBus.$emit('changeCollaspse')
+    },
     getUserInfo () {
       // 直接通过axios查询个人信息
       this.$axios({
